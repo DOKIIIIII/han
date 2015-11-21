@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>Facescores</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/common.css" rel="stylesheet" />
+		<link href="css/detail.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+			.mui-input-range .mui-tooltip{
+				z-index: -99;
+				top: -999999px;
+			}
+			h5{
+				text-align: center;
+			}
+			.mui-btn-block {
+    font-size: 10px;
+    display: block;
+    width: 10%;
+    margin: 0 auto;
+}
+.mui-popover .mui-btn-block:last-child {
+    margin-bottom: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<!--主照片-->
+			<div class="imgbox">
+				<img src="images/img2.png" alt="" data-preview-src="" data-preview-group="1">
+			</div>
+			<!--打分-->
+			<div id="middlePopover" class="mui-popover">
+				<div class="mui-popover-arrow"></div>
+				<h5 style="clear: left;">打分：<span id='block-range-val'>0</span></h5>
+				<div class="mui-input-row mui-input-range">
+					<input type="range" id='block-range' value="0" min="0" max="1000">
+				</div>
+				<div class="btn-width">
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-block" id="setPoint">确定</button>
+				</div>
+			</div>
+		</div>
+		<footer class="mui-bar mui-bar-tab">
+			<!--赞、评价、踩-->
+			<div id="bottom" class="mui-bar mui-bar-tab">
+				<a class="mui-tab-item" href="javascript:;" id="heart"><img src="images/content/heart.png" alt="" /></a>
+				<a class="mui-tab-item" href="#middlePopover"><img src="images/footer/Note_act.png" alt="" /></a>
+				<a class="mui-tab-item" href="javascript:;" id="low"><img src="images/content/low.png" alt="" /></a>
+			</div>
+			<div class="footer_w">
+				<!--个人头像-->
+				<div class="headImg">
+					<img src="images/content/头像.png" />
+				</div>
+				<div class="user_left">
+					<ul>
+						<!--性别年龄-->
+						<li class="age"><span>23</span></li>
+						<!--用户昵称-->
+						<li class="name">小鸟游</li>
+					</ul>
+					<ul>
+						<li class="place"></li>
+						<!--所在地-->
+						<li class="placeName">广州</li>
+					</ul>
+				</div>
+				<div class="user_right">
+					<ul class="icon">
+						<li class="fire"></li>
+						<li class="heart"></li>
+						<li class="down"></li>
+					</ul>
+					<ul class="Num">
+						<!--火的数量-->
+						<li class="fireNum">234</li>
+						<!--心的数量-->
+						<li class="heartNum">123</li>
+						<!--踩的数量-->
+						<li class="downNum">34</li>
+					</ul>
+				</div>
+				<div class="point">
+					<!--分数-->
+					<i>9</i><em>.25</em>
+				</div>
+				<!--排名-->
+				<div class="rank">
+					全国排名：<span>999999</span> 同城排名：
+					<span>999999</span>
+				</div>
+			</div>
+		</footer>
+		<script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.zoom.js"></script>
+		<script src="js/mui.previewimage.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为true
+					doubletap: true, //默认为false
+					longtap: true, //默认为false
+					swipe: true, //默认为true
+					drag: true, //默认为true
+					hold: false, //默认为false，不监听
+					release: false //默认为false，不监听
+				}
+			});
+			mui.previewImage();
+			//打分range的值
+			var rangeList = document.querySelectorAll('input[type="range"]');
+			for (var i = 0, len = rangeList.length; i < len; i++) {
+				rangeList[i].addEventListener('input', function() {
+					document.getElementById(this.id + '-val').innerHTML = this.value / 100;
+				});
+			}
+			//打分
+			jQuery("#setPoint").click(function() {
+				jQuery.ajax()
+			})
+			//赞
+			jQuery("#heart").click(function() {
+				jQuery.ajax()
+			})
+			//踩
+			jQuery("#low").click(function() {
+				jQuery.ajax()
+			})
+		</script>
+	</body>
+
+</html>
